@@ -3,6 +3,8 @@ const express = require("express");
 const app = express();
 const db = require("./config/keys").mongoURI;
 const bodyParser = require("body-parser");
+const User = require("./models/User")
+
 
 
 //routes
@@ -14,15 +16,22 @@ mongoose
   .then(() => console.log("Connected to MongoDB successfully"))
   .catch(err => console.log(err));
 
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
+      // const user = new User({
+      //   handle: 'jim',
+      //   email: "jim@jim.jim",
+      //   password:"jimisgreat123"
+      // })
+        user.save()
         console.log(res);     
         res.send("whats up yo")});
 app.use("/api/users", users);
 app.use("/api/tweets", tweets);
 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+
 
 //port info
 const port = process.env.PORT || 5000;
