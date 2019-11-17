@@ -6,8 +6,17 @@ const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const validateRegisterInput = require('../../validation/register');
 const validateLoginInput = require('../../validation/login');
+const passport = require("passport")
 
 router.get("/test", (req, res) => res.json({ msg: "This is the users route" }));
+
+router.get('/current', passport.authenticate('jwt', { session: false }), (req, res) => {
+    res.json({
+        id: req.user.id,
+        handle: req.user.handle,
+        email: req.user.email
+    });
+})
 
 router.post("/register", (req, res) => {
     const { errors, isValid } = validateRegisterInput(req.body);
@@ -62,7 +71,8 @@ router.post("/login", (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    User.findOne({ email }).then(user => {
+    User.findOne({ email })
+        .then(user => {
         if (!user) {
             // errors.name = "This user does not exist";
             res.status(400).json({ name: "This user does not exist"})
@@ -74,9 +84,8 @@ router.post("/login", (req, res) => {
 
                 const payload ={
                     id: user.id,
-                    handle: user.handle,
                     email: user.email
-                }
+                };
 
                 jwt.sign(
                     payload,

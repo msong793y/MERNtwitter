@@ -4,6 +4,7 @@ const app = express();
 const db = require("./config/keys").mongoURI;
 const bodyParser = require("body-parser");
 const User = require("./models/User")
+const passport = require('passport')
 
 
 
@@ -19,15 +20,18 @@ mongoose
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.get("/", (req, res) => {
-      // const user = new User({
-      //   handle: 'jim',
-      //   email: "jim@jim.jim",
-      //   password:"jimisgreat123"
-      // })
-        user.save()
-        console.log(res);     
-        res.send("whats up yo")});
+app.use(passport.initialize());
+require("./config/passport")(passport)
+
+// app.get("/", (req, res) => {
+//       // const user = new User({
+//       //   handle: 'jim',
+//       //   email: "jim@jim.jim",
+//       //   password:"jimisgreat123"
+//       // })
+//         user.save()
+//         console.log(res);     
+//         res.send("whats up yo")});
 app.use("/api/users", users);
 app.use("/api/tweets", tweets);
 
